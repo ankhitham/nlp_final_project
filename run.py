@@ -9,8 +9,7 @@ import openai
 from openai import AzureOpenAI
 
 client = AzureOpenAI(api_key=OPENAI_API_KEY,
-api_version='2023-05-15',
-api_key=OPENAI_API_KEY)
+api_version='2023-05-15')
 import json
 from tqdm import tqdm
 from transformers import AutoTokenizer
