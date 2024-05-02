@@ -79,7 +79,7 @@ class LLM:
                 while not is_ok:
                     retry_count += 1
                     try:
-                        response = client.chat.completions.create(model=deploy_name if args.azure else None,
+                        response = client.chat.completions.create(
                         model=args.model,
                         messages=prompt,
                         temperature=args.temperature,
