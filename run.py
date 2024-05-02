@@ -102,7 +102,7 @@ class LLM:
                 while not is_ok:
                     retry_count += 1
                     try:
-                        response = client.completions.create(model=deploy_name if args.azure else None,
+                        response = client.completions.create(
                         model=args.model,
                         prompt=prompt,
                         temperature=args.temperature,
