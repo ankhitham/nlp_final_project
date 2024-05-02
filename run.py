@@ -42,13 +42,6 @@ class LLM:
             OPENAI_ORG_ID = os.environ.get("OPENAI_ORG_ID")
             OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE")
 
-            if args.azure:
-                # TODO: The 'openai.api_base' option isn't read in the client API. You will need to pass it when you instantiate the client, e.g. 'OpenAI(base_url=OPENAI_API_BASE)'
-                # openai.api_base = OPENAI_API_BASE
-            else: 
-                # TODO: The 'openai.organization' option isn't read in the client API. You will need to pass it when you instantiate the client, e.g. 'OpenAI(organization=OPENAI_ORG_ID)'
-                # openai.organization = OPENAI_ORG_ID
-
             self.tokenizer = AutoTokenizer.from_pretrained("gpt2", fast_tokenizer=False) # TODO: For ChatGPT we should use a different one
             # To keep track of how much the API costs
             self.prompt_tokens = 0
