@@ -35,8 +35,7 @@ class LLM:
             from openai import AzureOpenAI
             
             client = AzureOpenAI(api_key=OPENAI_API_KEY,
-            api_version='2023-05-15',
-            api_key=OPENAI_API_KEY) 
+            api_version='2023-05-15') 
             OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
             OPENAI_ORG_ID = os.environ.get("OPENAI_ORG_ID")
             OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE")
