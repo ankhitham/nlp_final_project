@@ -1,8 +1,5 @@
 import argparse
 import openai
-from openai import OpenAI
-
-client = OpenAI(api_key=OPENAI_API_KEY)
 import json
 from tqdm import tqdm
 from transformers import AutoTokenizer
@@ -21,8 +18,8 @@ def main():
     parser.add_argument("--ndoc", type=int, default=20, help="Generate summary for the top-ndoc documents")
     args = parser.parse_args()
 
-    # TODO: The 'openai.organization' option isn't read in the client API. You will need to pass it when you instantiate the client, e.g. 'OpenAI(organization=OPENAI_ORG_ID)'
-    # openai.organization = OPENAI_ORG_ID
+    openai.organization = OPENAI_ORG_ID
+    openai.api_key = OPENAI_API_KEY
 
     data = json.load(open(args.f))
     total_tokens = 0
@@ -51,10 +48,12 @@ def main():
             while not ok:
                 retry_count += 1
                 try:
-                    response = client.chat.completions.create(model=args.model,
-                    messages=prompt,
-                    temperature=args.temperature,
-                    max_tokens=args.max_tokens)
+                    response = openai.ChatCompletion.create(
+                        model=args.model,
+                        messages=prompt,
+                        temperature=args.temperature,
+                        max_tokens=args.max_tokens,
+                    )
                     ok = True
                 except Exception as error:
                     if retry_count <= 5:
@@ -62,9 +61,9 @@ def main():
                         continue
                     print(error)
                     import pdb; pdb.set_trace()
-
-            content = response.choices[0].message.content.strip()
-            total_tokens += response.usage.total_tokens
+            
+            content = response['choices'][0]['message']['content'].strip()
+            total_tokens += response['usage']['total_tokens']
             data[item_id]['docs'][doc_id][args.target] = content
 
             print("--------------------")
@@ -72,11 +71,11 @@ def main():
             print(f"Document ({doc['title']}): {doc['text']}")
             print("---")
             print(f"{args.target}: {content}")
-
+        
         # Save intermediate results in case the program crashes
         if item_id % 10 == 0:
             json.dump(data, open(new_f_temp, "w"), indent=4)
-
+        
     new_f = args.f.replace(".json", f"_w_{args.target}_top{args.ndoc}.json")
     json.dump(data, open(new_f, "w"), indent=4)
 
