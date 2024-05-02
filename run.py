@@ -6,6 +6,11 @@ logger.setLevel(logging.INFO)
 import argparse
 import os
 import openai
+from openai import AzureOpenAI
+
+client = AzureOpenAI(api_key=OPENAI_API_KEY,
+api_version='2023-05-15',
+api_key=OPENAI_API_KEY)
 import json
 from tqdm import tqdm
 from transformers import AutoTokenizer
@@ -27,19 +32,22 @@ class LLM:
         self.args = args
 
         if args.openai_api:
-            import openai 
+            import openai
+            from openai import AzureOpenAI
+            
+            client = AzureOpenAI(api_key=OPENAI_API_KEY,
+            api_version='2023-05-15',
+            api_key=OPENAI_API_KEY) 
             OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
             OPENAI_ORG_ID = os.environ.get("OPENAI_ORG_ID")
             OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE")
 
             if args.azure:
-                openai.api_key = OPENAI_API_KEY
-                openai.api_base = OPENAI_API_BASE
-                openai.api_type = 'azure'
-                openai.api_version = '2023-05-15' 
+                # TODO: The 'openai.api_base' option isn't read in the client API. You will need to pass it when you instantiate the client, e.g. 'OpenAI(base_url=OPENAI_API_BASE)'
+                # openai.api_base = OPENAI_API_BASE
             else: 
-                openai.api_key = OPENAI_API_KEY
-                openai.organization = OPENAI_ORG_ID
+                # TODO: The 'openai.organization' option isn't read in the client API. You will need to pass it when you instantiate the client, e.g. 'OpenAI(organization=OPENAI_ORG_ID)'
+                # openai.organization = OPENAI_ORG_ID
 
             self.tokenizer = AutoTokenizer.from_pretrained("gpt2", fast_tokenizer=False) # TODO: For ChatGPT we should use a different one
             # To keep track of how much the API costs
@@ -47,7 +55,7 @@ class LLM:
             self.completion_tokens = 0
         else:
             self.model, self.tokenizer = load_model(args.model)
-        
+
         self.prompt_exceed_max_length = 0
         self.fewer_than_50 = 0
         self.azure_filter_fail = 0
@@ -80,15 +88,13 @@ class LLM:
                 while not is_ok:
                     retry_count += 1
                     try:
-                        response = openai.ChatCompletion.create(
-                            engine=deploy_name if args.azure else None,
-                            model=args.model,
-                            messages=prompt,
-                            temperature=args.temperature,
-                            max_tokens=max_tokens,
-                            stop=stop,
-                            top_p=args.top_p,
-                        )
+                        response = client.chat.completions.create(model=deploy_name if args.azure else None,
+                        model=args.model,
+                        messages=prompt,
+                        temperature=args.temperature,
+                        max_tokens=max_tokens,
+                        stop=stop,
+                        top_p=args.top_p)
                         is_ok = True
                     except Exception as error:
                         if retry_count <= 5:
@@ -96,24 +102,22 @@ class LLM:
                             continue
                         print(error)
                         import pdb; pdb.set_trace()
-                self.prompt_tokens += response['usage']['prompt_tokens']
-                self.completion_tokens += response['usage']['completion_tokens']
-                return response['choices'][0]['message']['content']
+                self.prompt_tokens += response.usage.prompt_tokens
+                self.completion_tokens += response.usage.completion_tokens
+                return response.choices[0].message.content
             else:
                 is_ok = False
                 retry_count = 0
                 while not is_ok:
                     retry_count += 1
                     try:
-                        response = openai.Completion.create(
-                            engine=deploy_name if args.azure else None,
-                            model=args.model,
-                            prompt=prompt,
-                            temperature=args.temperature,
-                            max_tokens=max_tokens,
-                            top_p=args.top_p,
-                            stop=["\n", "\n\n"] + (stop if stop is not None else [])
-                        )    
+                        response = client.completions.create(model=deploy_name if args.azure else None,
+                        model=args.model,
+                        prompt=prompt,
+                        temperature=args.temperature,
+                        max_tokens=max_tokens,
+                        top_p=args.top_p,
+                        stop=["\n", "\n\n"] + (stop if stop is not None else []))    
                         is_ok = True
                     except Exception as error:
                         if retry_count <= 5:
@@ -125,9 +129,9 @@ class LLM:
                             continue
                         print(error)
                         import pdb; pdb.set_trace()
-                self.prompt_tokens += response['usage']['prompt_tokens']
-                self.completion_tokens += response['usage']['completion_tokens']
-                return response['choices'][0]['text']
+                self.prompt_tokens += response.usage.prompt_tokens
+                self.completion_tokens += response.usage.completion_tokens
+                return response.choices[0].text
         else:
             inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
             stop = [] if stop is None else stop
@@ -237,11 +241,11 @@ def main():
 
 
     logger.info(f"Set the model max length to {args.max_length} (if not correct, check the code)")
-        
+
 
     # Load the model or setup the API
     llm = LLM(args)
-    
+
     # Generate prompts
     np.random.seed(args.seed)
 
@@ -313,7 +317,7 @@ def main():
                 interactive_prompt = prompt.rstrip() + "\n" # Start a new line
                 inline_doc = ""
                 num_turn = 0
-                
+
                 doc_history = []
                 while True:
                     # For each action, it should end at the new line
@@ -379,11 +383,11 @@ def main():
                     else:
                         # Sometimes model starts to output random things.
                         break
-                    
+
                     if num_turn >= args.max_turn:
                         logger.warning("Reach maximum number of turns. Terminate now.")
                         break
-                
+
                 if "qampari" in args.eval_file:
                     output_answer = output_answer.rstrip().rstrip(",")
                 output_array.append(output_answer)
@@ -392,7 +396,7 @@ def main():
             else: 
                 output_array.append(llm.generate(prompt, min(args.max_new_tokens, args.max_length-prompt_len)))
                 item['prompt'] = prompt
-            
+
             output_array[-1] = output_array[-1].replace("<|im_end|>", "").rstrip()
             if output_array[-1].endswith("End."):
                 output_array[-1] = output_array[-1][:-len("End.")]
@@ -401,9 +405,9 @@ def main():
             logger.info(f"Question: {item['question']}")
             logger.info(f"Gold answer: {item['answer']}")
             logger.info(f"Final model output: {output_array[-1]}") 
-        
+
         item['output'] = output_array if len(output_array) > 1 else output_array[0]
-        
+
     logger.info(f"#Cases when prompts exceed max length: {llm.prompt_exceed_max_length}")
     logger.info(f"#Cases when max new tokens < 50: {llm.fewer_than_50}")
 
@@ -425,7 +429,7 @@ def main():
     if args.force_cite_show:
         name += f"-forceciteshow"
 
-    
+
     eval_data = {
         "args": args.__dict__,
         "data": eval_data,
