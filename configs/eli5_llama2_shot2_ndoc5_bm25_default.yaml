@@ -5,6 +5,6 @@ shot: 2
 ndoc: 5
 dataset_name: eli5
 tag: bm25
-model: meta-llama/Llama-2-7b-chat-hf
+model: meta-llama/Llama-2-7b-hf
 temperature: 1.0
 top_p: 0.95
