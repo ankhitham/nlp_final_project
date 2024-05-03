@@ -6,7 +6,7 @@
     "demos": [
         {
             "question": "Which is the most rainy place on earth?",
-            "answer": "Several places on Earth claim to be the most rainy, such as Lloró, Colombia, which reported an average annual rainfall of 12,717 mm between 1952 and 1989, and López de Micay, Colombia, which reported an annual 12,892 mm between 1960 and 2012 [3]. However, the official record is held by Mawsynram, India with an average annual rainfall of 11,872 mm [3], although nearby town Sohra, India, also known as Cherrapunji, holds the record for most rain in a calendar month for July 1861 and most rain in a year from August 1860 to July 1861 [1].",
+            "answer": "Several places on Earth claim to be the most rainy, such as Lloró, Colombia, which reported an average annual rainfall of 12,717 mm between 1952 and 1989, and López de Micay, Colombia, which reported an annual 12,892 mm between 1960 and 2012 [3]. This source was chosen as this info is directly from it. However, the official record is held by Mawsynram, India with an average annual rainfall of 11,872 mm [3], although nearby town Sohra, India, also known as Cherrapunji, holds the record for most rain in a calendar month for July 1861 and most rain in a year from August 1860 to July 1861 [1]. This source was chosen as the details imply this answer.",
             "docs": [
                 {
                     "title": "Cherrapunji",
@@ -32,7 +32,7 @@
         },
         {
             "question": "When did the us break away from england?",
-            "answer": "The United States took the first step towards gaining independence from Great Britain when it declared independence from Great Britain on July 2, 1776 (although the event is now commemorated on July 4, 1776, the date when the Declaration of Independence was officially adopted by Congress) [2]. The Treaty of Paris was later signed on September 3, 1783, formally separating the United States from the British Empire [3].",
+            "answer": "The United States took the first step towards gaining independence from Great Britain when it declared independence from Great Britain on July 2, 1776 (although the event is now commemorated on July 4, 1776, the date when the Declaration of Independence was officially adopted by Congress) [2]. This source was chosen due to a direct correspondence of information. The Treaty of Paris was later signed on September 3, 1783, formally separating the United States from the British Empire [3]. This source was chosen as it was mentioned directly",
             "docs": [
                 {
                     "title": "United States withdrawal from Saudi Arabia",
@@ -58,7 +58,7 @@
         },
         {
             "question": "Who set the record for longest field goal?",
-            "answer": "The record for the longest field goal in an NFL game was set by Matt Prater at 64 yards [1], but the record for the longest field goal at any level was 69 yards, kicked by collegiate kicker Ove Johansson in a 1976 Abilene Christian University football game against East Texas State University [2].",
+            "answer": "The record for the longest field goal in an NFL game was set by Matt Prater at 64 yards [1], but the record for the longest field goal at any level was 69 yards, kicked by collegiate kicker Ove Johansson in a 1976 Abilene Christian University football game against East Texas State University [2]. These sources were chosen as the answers are almost word for word contained in them.",
             "docs": [
                 {
                     "title": "Field goal",
@@ -84,7 +84,7 @@
         },
         {
             "question": "Who played galen in planet of the apes?",
-            "answer": "In the 1968 film Planet of the Apes, Galen was played by Wright King [2]. And in the tv series Planet of the Apes, Galen was played by Roddy McDowall [1].",
+            "answer": "In the 1968 film Planet of the Apes, Galen was played by Wright King [2]. This source was chosen as it was the most informative and relevant among all sources. And in the tv series Planet of the Apes, Galen was played by Roddy McDowall [1]. This source was chosen as it directly mentions Roddy.",
             "docs": [
                 {
                     "title": "Planet of the Apes",
