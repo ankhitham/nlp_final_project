@@ -5,6 +5,6 @@ shot: 2
 ndoc: 3
 dataset_name: qampari
 tag: gtr_light_inst
-model: Llama-2-7b-hf
+model: Llama-2-7b-chat-hf
 temperature: 1.0
 top_p: 0.95
