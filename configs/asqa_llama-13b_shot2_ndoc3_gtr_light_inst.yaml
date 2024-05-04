@@ -5,6 +5,6 @@ shot: 2
 ndoc: 3
 dataset_name: asqa
 tag: gtr_light_inst
-model: llama-13b
+model: Llama-2-13b-hf
 temperature: 1.0
 top_p: 0.95
