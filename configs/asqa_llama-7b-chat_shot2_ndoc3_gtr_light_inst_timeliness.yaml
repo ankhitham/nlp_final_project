@@ -1,5 +1,5 @@
 ---
-prompt_file: prompts/asqa_metacognitive_light.json
+prompt_file: prompts/asqa_timeliness_light.json
 eval_file: data/asqa_eval_gtr_top100.json
 shot: 1
 ndoc: 3
