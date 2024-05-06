@@ -1,7 +1,7 @@
 ---
 prompt_file: prompts/asqa_confidence_light.json
 eval_file: data/asqa_eval_gtr_top100.json
-shot: 1
+shot: 2
 ndoc: 3
 dataset_name: asqa
 tag: gtr
